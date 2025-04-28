@@ -6,7 +6,7 @@ function App() {
 
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
-  const onSuccess = (credentialResponse) => {
+  const onSuccess = (credentialResponse:any) => {
     console.log('Login Success:', credentialResponse);
     // after success redirect to your local website
     window.location.href = redirectUri;
