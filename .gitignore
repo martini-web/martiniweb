@@ -40,3 +40,9 @@ package-lock.json
 
 # Temporary files
 *.log
+
+# Yarn 2/3
+/.yarn/
+/.yarn-cache/
+/.yarn-plugins/
+/.yarn/releases

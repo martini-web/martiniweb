@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: my-vite-project
+    env: node
+    buildCommand: yarn install && yarn build
+    startCommand: yarn preview
+    branch: main
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+    # Specify the Yarn version here
+    buildEnvironment:
+      - key: YARN_VERSION
+        value: "3.6.4"
