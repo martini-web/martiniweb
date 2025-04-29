@@ -414,7 +414,6 @@ import { useEffect, useState } from 'react';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
 
 const buttonStyle: React.CSSProperties = {
   padding: '12px 24px',
@@ -430,10 +429,20 @@ function InnerApp() {
   const [inWebView, setInWebView] = useState(false);
 
   const login = useGoogleLogin({
+    // onSuccess: (tokenResponse) => {
+    //   console.log('Login Success:', tokenResponse);
+    //   window.location.href = redirectUri;
+    // },
+
     onSuccess: (tokenResponse) => {
-      console.log('Login Success:', tokenResponse);
+      const token = tokenResponse.access_token;
+      const redirectUri = inWebView
+        ? 'martiniapp://auth?token=' + token
+        : import.meta.env.VITE_GOOGLE_REDIRECT_URI;
+    
       window.location.href = redirectUri;
     },
+
     onError: (error) => {
       console.log('Login Failed', error);
     },
