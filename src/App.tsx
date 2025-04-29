@@ -132,8 +132,8 @@
 
 
 // App.tsx (Web app)
-import { useEffect, useState } from 'react';
-import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
+// import { useEffect, useState } from 'react';
+// import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 
 // function AppContent() {
 //   const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
@@ -149,12 +149,27 @@ import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 //   const login = useGoogleLogin({
 //     onSuccess: (tokenResponse) => {
 //       console.log('Login Success:', tokenResponse);
-//       window.location.href = redirectUri;
+
+//       const accessToken = tokenResponse.access_token;
+//       if (accessToken) {
+//         const deepLinkUrl = `martiniapp://auth-callback?access_token=${accessToken}`;
+
+//         // Try to open the app
+//         window.location.href = deepLinkUrl;
+
+//         // fallback to web success page if app not installed
+//         setTimeout(() => {
+//           window.location.href = redirectUri;
+//         }, 2000);
+//       } else {
+//         console.log('No access token received.');
+//         window.location.href = redirectUri;
+//       }
 //     },
 //     onError: (error) => {
 //       console.log('Login Failed', error);
 //     },
-//     flow: 'implicit', // or 'auth-code' based on your backend setup
+//     flow: 'implicit',
 //   });
 
 //   const handleOpenInBrowser = () => {
@@ -194,6 +209,23 @@ import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 //   );
 // }
 
+
+// function App() {
+//   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+//   return (
+//     <GoogleOAuthProvider clientId={clientId}>
+//       <AppContent />
+//     </GoogleOAuthProvider>
+//   );
+// }
+
+// export default App;
+
+
+import { useEffect, useState } from 'react';
+import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
+
 function AppContent() {
   const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
   const [inWebView, setInWebView] = useState(false);
@@ -209,6 +241,11 @@ function AppContent() {
     onSuccess: (tokenResponse) => {
       console.log('Login Success:', tokenResponse);
 
+      // Directly redirect to google.com for testing
+      window.location.href = 'https://www.google.com';
+
+      // Uncomment the following block for the original behavior:
+      /*
       const accessToken = tokenResponse.access_token;
       if (accessToken) {
         const deepLinkUrl = `martiniapp://auth-callback?access_token=${accessToken}`;
@@ -224,6 +261,7 @@ function AppContent() {
         console.log('No access token received.');
         window.location.href = redirectUri;
       }
+      */
     },
     onError: (error) => {
       console.log('Login Failed', error);
@@ -267,7 +305,6 @@ function AppContent() {
     </div>
   );
 }
-
 
 function App() {
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
