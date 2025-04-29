@@ -227,12 +227,17 @@ import { useEffect, useState } from 'react';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 
 function AppContent() {
-  const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
+  const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI; // This should match the one in the Google Console
   const [inWebView, setInWebView] = useState(false);
 
   useEffect(() => {
     const userAgent = navigator.userAgent.toLowerCase();
-    if (userAgent.includes('wv') || userAgent.includes('webview') || userAgent.includes('iphone') || userAgent.includes('android')) {
+    if (
+      userAgent.includes('wv') ||
+      userAgent.includes('webview') ||
+      userAgent.includes('iphone') ||
+      userAgent.includes('android')
+    ) {
       setInWebView(true);
     }
   }, []);
@@ -241,28 +246,16 @@ function AppContent() {
     onSuccess: (tokenResponse) => {
       console.log('Login Success:', tokenResponse);
 
-      // Directly redirect to google.com for testing
-      window.location.href = 'https://www.google.com';
-      console.log("recirec",redirectUri)
-
-      // Uncomment the following block for the original behavior:
-      /*
       const accessToken = tokenResponse.access_token;
       if (accessToken) {
-        const deepLinkUrl = `martiniapp://auth-callback?access_token=${accessToken}`;
-
-        // Try to open the app
-        window.location.href = deepLinkUrl;
-
-        // fallback to web success page if app not installed
-        setTimeout(() => {
-          window.location.href = redirectUri;
-        }, 2000);
+        // On successful login, directly redirect to the callback URL.
+        // Ensure that `redirectUri` points to a valid URL for handling the token
+        window.location.href = `${redirectUri}?access_token=${accessToken}`;
       } else {
         console.log('No access token received.');
+        // Fallback if no token received
         window.location.href = redirectUri;
       }
-      */
     },
     onError: (error) => {
       console.log('Login Failed', error);
@@ -276,7 +269,7 @@ function AppContent() {
     }
   };
 
-  const buttonStyle = {
+  const buttonStyle: React.CSSProperties = {
     padding: '10px 20px',
     backgroundColor: '#4285F4',
     color: '#fff',
@@ -318,3 +311,93 @@ function App() {
 }
 
 export default App;
+
+
+// import { useEffect, useState } from 'react';
+// import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
+
+// function AppContent() {
+//   const mobileRedirectUri = 'https://martiniweb.vercel.app/oauth/callback'; // Your web callback URL
+//   const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
+
+//   const [inWebView, setInWebView] = useState(false);
+
+//   useEffect(() => {
+//     const userAgent = navigator.userAgent.toLowerCase();
+//     if (
+//       userAgent.includes('wv') ||
+//       userAgent.includes('webview') ||
+//       userAgent.includes('iphone') ||
+//       userAgent.includes('android')
+//     ) {
+//       setInWebView(true);
+//     }
+//   }, []);
+
+//   const login = useGoogleLogin({
+//     onSuccess: (tokenResponse) => {
+//       console.log('Login Success:', tokenResponse);
+
+//       const accessToken = tokenResponse.access_token;
+//       if (accessToken) {
+//         // For web, just redirect directly to the callback URL with the access token
+//         window.location.href = `${redirectUri}?access_token=${accessToken}`;
+//       } else {
+//         console.log('No access token received.');
+//         window.location.href = redirectUri; // fallback
+//       }
+//     },
+//     onError: (error) => {
+//       console.log('Login Failed', error);
+//     },
+//     flow: 'implicit',
+//   });
+
+//   const handleOpenInBrowser = () => {
+//     if (window.ReactNativeWebView) {
+//       window.ReactNativeWebView.postMessage('open_browser_for_login');
+//     }
+//   };
+
+//   const buttonStyle: React.CSSProperties = {
+//     padding: '10px 20px',
+//     backgroundColor: '#4285F4',
+//     color: '#fff',
+//     border: 'none',
+//     borderRadius: '5px',
+//     fontSize: '16px',
+//     fontWeight: 'bold',
+//     cursor: 'pointer',
+//   };
+
+//   return (
+//     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100vw' }}>
+//       <div style={{ marginTop: 100, textAlign: 'center' }}>
+//         <button
+//           onClick={() => {
+//             if (inWebView) {
+//               handleOpenInBrowser();
+//             } else {
+//               login();
+//             }
+//           }}
+//           style={buttonStyle}
+//         >
+//           Continue with Google
+//         </button>
+//       </div>
+//     </div>
+//   );
+// }
+
+// function App() {
+//   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+//   return (
+//     <GoogleOAuthProvider clientId={clientId}>
+//       <AppContent />
+//     </GoogleOAuthProvider>
+//   );
+// }
+
+// export default App;
