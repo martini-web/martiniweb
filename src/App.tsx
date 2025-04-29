@@ -682,7 +682,7 @@ function InnerApp() {
       const redirectUri = 'martiniapp://auth?token=' + token;
   
       // If inside a WebView, send the URL to React Native App
-      if (inWebView && window.ReactNativeWebView) {
+      if (webViewState==='true' && window.ReactNativeWebView) {
         window.ReactNativeWebView.postMessage(redirectUri);
       } else {
         // For normal web usage, redirect to the Google redirect URI
