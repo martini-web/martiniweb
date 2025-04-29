@@ -112,12 +112,14 @@ import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import PrivateRoute from './components/PrivateRoute';
 
+// Use environment variable or fallback
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI || 'https://martiniweb-ouz4.vercel.app';
 
 function App() {
   return (
     <GoogleOAuthProvider clientId={clientId}>
-      <Router>
+      <Router basename={new URL(redirectUri).pathname}>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route
@@ -128,7 +130,7 @@ function App() {
               </PrivateRoute>
             }
           />
-          {/* Default route */}
+          {/* Default catch-all route */}
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </Router>
