@@ -29,7 +29,7 @@ function LoginPage() {
 
       setTimeout(() => {
         navigate('/dashboard');
-      }, 1500);
+      }, 2000);
     },
     onError: (error) => {
       console.log('Login Failed', error);
