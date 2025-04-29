@@ -429,21 +429,36 @@ function InnerApp() {
   const [inWebView, setInWebView] = useState(false);
   const [token, setToken] = useState<string | null>(null);
 
+  // useEffect(() => {
+  //   if (token) {
+  //     const redirectUri = 'martiniapp://auth?token=' + token;
+  
+  //     // Create a temporary link and click it
+  //     const a = document.createElement('a');
+  //     a.href = redirectUri;
+  //     a.style.display = 'none';
+  //     document.body.appendChild(a);
+  //     a.click();
+  
+  //     // Optional: Fallback to store or browser page after delay if app not installed
+  //     setTimeout(() => {
+  //       // fallback to Play Store or landing page (optional)
+  //       // window.location.href = 'https://play.google.com/store/apps/details?id=com.yourapp';
+  //     }, 1500);
+  //   }
+  // }, [token]);
+
   useEffect(() => {
     if (token) {
       const redirectUri = 'martiniapp://auth?token=' + token;
   
-      // Create a temporary link and click it
-      const a = document.createElement('a');
-      a.href = redirectUri;
-      a.style.display = 'none';
-      document.body.appendChild(a);
-      a.click();
+      // Use window.location.replace to try and avoid the popup
+      window.location.replace(redirectUri);
   
       // Optional: Fallback to store or browser page after delay if app not installed
       setTimeout(() => {
-        // fallback to Play Store or landing page (optional)
-        // window.location.href = 'https://play.google.com/store/apps/details?id=com.yourapp';
+        // Fallback logic if the app is not installed
+        window.location.href = 'https://play.google.com/store/apps';
       }, 1500);
     }
   }, [token]);
