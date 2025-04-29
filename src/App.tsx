@@ -106,15 +106,70 @@
 
 
 // App.tsx
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+// import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+// import { GoogleOAuthProvider } from '@react-oauth/google';
+// import LoginPage from './pages/LoginPage';
+// import Dashboard from './pages/Dashboard';
+// import PrivateRoute from './components/PrivateRoute';
+
+// // Use environment variable or fallback
+// const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+// const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI || 'https://martiniweb-ouz4.vercel.app';
+
+// function App() {
+//   return (
+//     <GoogleOAuthProvider clientId={clientId}>
+//       <Router basename={new URL(redirectUri).pathname}>
+//         <Routes>
+//           <Route path="/login" element={<LoginPage />} />
+//           <Route
+//             path="/dashboard"
+//             element={
+//               <PrivateRoute>
+//                 <Dashboard />
+//               </PrivateRoute>
+//             }
+//           />
+//           {/* Default catch-all route */}
+//           <Route path="*" element={<Navigate to="/login" />} />
+//         </Routes>
+//       </Router>
+//     </GoogleOAuthProvider>
+//   );
+// }
+
+// export default App;
+
+
+// App.tsx
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import PrivateRoute from './components/PrivateRoute';
+import { useEffect } from 'react';
 
-// Use environment variable or fallback
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI || 'https://martiniweb-ouz4.vercel.app';
+
+// ✅ Token handler component
+function TokenHandler() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const token = params.get('token');
+    if (token) {
+      sessionStorage.setItem('auth_token', token); // or localStorage
+      navigate('/dashboard', { replace: true });
+    } else {
+      navigate('/login', { replace: true });
+    }
+  }, [location, navigate]);
+
+  return null; // Can show a loader if needed
+}
 
 function App() {
   return (
@@ -122,6 +177,7 @@ function App() {
       <Router basename={new URL(redirectUri).pathname}>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/auth/callback" element={<TokenHandler />} />
           <Route
             path="/dashboard"
             element={
@@ -130,7 +186,6 @@ function App() {
               </PrivateRoute>
             }
           />
-          {/* Default catch-all route */}
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </Router>
@@ -139,3 +194,4 @@ function App() {
 }
 
 export default App;
+
