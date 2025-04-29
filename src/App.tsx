@@ -250,7 +250,9 @@ function AppContent() {
       if (accessToken) {
         // On successful login, directly redirect to the callback URL.
         // Ensure that `redirectUri` points to a valid URL for handling the token
-        window.location.href = `${redirectUri}?access_token=${accessToken}`;
+        // window.location.href = `${redirectUri}?access_token=${accessToken}`;
+        window.location.href = `${redirectUri}#access_token=${accessToken}`;
+
       } else {
         console.log('No access token received.');
         // Fallback if no token received
