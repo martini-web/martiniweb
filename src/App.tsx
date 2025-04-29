@@ -452,17 +452,14 @@ function InnerApp() {
     if (token) {
       const redirectUri = 'martiniapp://auth?token=' + token;
   
-      // Use window.location.replace to try and avoid the popup
-      window.location.replace(redirectUri);
-  
-      // Optional: Fallback to store or browser page after delay if app not installed
-      setTimeout(() => {
-        // Fallback logic if the app is not installed
-        window.location.href = 'https://play.google.com/store/apps';
-      }, 1500);
+      // If inside a WebView, send the URL to React Native App
+      if (window.ReactNativeWebView) {
+        window.ReactNativeWebView.postMessage(redirectUri);
+      } else {
+        window.location.replace(redirectUri); // Fallback for normal web usage
+      }
     }
   }, [token]);
-
 
   const login = useGoogleLogin({
     // onSuccess: (tokenResponse) => {
