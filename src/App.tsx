@@ -656,6 +656,7 @@ import { useEffect, useState } from 'react';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+const webRedirectionUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI
 
 const buttonStyle: React.CSSProperties = {
   padding: '12px 24px',
@@ -671,25 +672,40 @@ function InnerApp() {
   const [inWebView, setInWebView] = useState(false);
   const [token, setToken] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Check if WebView state is saved in sessionStorage
-    const webViewState = sessionStorage.getItem('inWebView');
-    if (webViewState === 'true') {
-      setInWebView(true);
-    }
+  // useEffect(() => {
+  //   // Check if WebView state is saved in sessionStorage
+  //   const webViewState = sessionStorage.getItem('inWebView');
+  //   if (webViewState === 'true') {
+  //     setInWebView(true);
+  //   }
 
-    if (token) {
-      const redirectUri = 'martiniapp://auth?token=' + token;
+  //   if (token) {
+  //     const redirectUri = 'martiniapp://auth?token=' + token;
   
-      // If inside a WebView, send the URL to React Native App
-      if (webViewState==='true' && window.ReactNativeWebView) {
-        window.ReactNativeWebView.postMessage(redirectUri);
-      } else {
-        // For normal web usage, redirect to the Google redirect URI
-        window.location.replace(import.meta.env.VITE_GOOGLE_REDIRECT_URI);
+  //     // If inside a WebView, send the URL to React Native App
+  //     if (webViewState==='true' && window.ReactNativeWebView) {
+  //       window.ReactNativeWebView.postMessage(redirectUri);
+  //     } else {
+  //       // For normal web usage, redirect to the Google redirect URI
+  //       window.location.replace(import.meta.env.VITE_GOOGLE_REDIRECT_URI);
+  //     }
+  //   }
+  // }, [token, inWebView]);
+
+    useEffect(() => {
+      if (token) {
+        const redirectUri = 'martiniapp://auth?token=' + token;
+    
+        // Use window.location.replace to try and avoid the popup
+        window.location.replace(redirectUri);
+    
+        // Optional: Fallback to store or browser page after delay if app not installed
+        setTimeout(() => {
+          // Fallback logic if the app is not installed
+          window.location.href = webRedirectionUri;
+        }, 1500);
       }
-    }
-  }, [token, inWebView]);
+    }, [token]);
 
   const login = useGoogleLogin({
     onSuccess: (tokenResponse) => {
