@@ -410,6 +410,143 @@
 
 
 
+// import { useEffect, useState } from 'react';
+// import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
+
+// const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+// const buttonStyle: React.CSSProperties = {
+//   padding: '12px 24px',
+//   fontSize: '16px',
+//   borderRadius: '8px',
+//   border: 'none',
+//   backgroundColor: '#4285F4',
+//   color: 'white',
+//   cursor: 'pointer',
+// };
+
+// function InnerApp() {
+//   const [inWebView, setInWebView] = useState(false);
+//   const [token, setToken] = useState<string | null>(null);
+
+//   // useEffect(() => {
+//   //   if (token) {
+//   //     const redirectUri = 'martiniapp://auth?token=' + token;
+  
+//   //     // Create a temporary link and click it
+//   //     const a = document.createElement('a');
+//   //     a.href = redirectUri;
+//   //     a.style.display = 'none';
+//   //     document.body.appendChild(a);
+//   //     a.click();
+  
+//   //     // Optional: Fallback to store or browser page after delay if app not installed
+//   //     setTimeout(() => {
+//   //       // fallback to Play Store or landing page (optional)
+//   //       // window.location.href = 'https://play.google.com/store/apps/details?id=com.yourapp';
+//   //     }, 1500);
+//   //   }
+//   // }, [token]);
+
+//   useEffect(() => {
+//     if (token) {
+//       const redirectUri = 'martiniapp://auth?token=' + token;
+  
+//       // If inside a WebView, send the URL to React Native App
+//       if (window.ReactNativeWebView) {
+//         window.ReactNativeWebView.postMessage(redirectUri);
+//       } else {
+//         window.location.replace(redirectUri); // Fallback for normal web usage
+//       }
+//     }
+//   }, [token]);
+
+//   const login = useGoogleLogin({
+//     // onSuccess: (tokenResponse) => {
+//     //   console.log('Login Success:', tokenResponse);
+//     //   window.location.href = redirectUri;
+//     // },
+
+//     // onSuccess: (tokenResponse) => {
+//     //   const token = tokenResponse.access_token;
+//     //   const redirectUri = 'martiniapp://auth?token=' + token
+//     //   // const redirectUri = inWebView
+//     //   //   ? 'martiniapp://auth?token=' + token
+//     //   //   : import.meta.env.VITE_GOOGLE_REDIRECT_URI;
+    
+//     //   window.location.href = redirectUri;
+//     // },
+//     onSuccess: (tokenResponse) => {
+//       const token = tokenResponse.access_token;
+//       setToken(token); // Triggers useEffect
+//     },
+
+//     onError: (error) => {
+//       console.log('Login Failed', error);
+//     },
+//   });
+
+//   const handleOpenInBrowser = () => {
+//     if (window.ReactNativeWebView) {
+//       window.ReactNativeWebView.postMessage('open_browser_for_login');
+//     }
+//   };
+
+//   useEffect(() => {
+//     const params = new URLSearchParams(window.location.search);
+//     const forceWeb = params.get('forceWeb');
+
+//     const userAgent = navigator.userAgent.toLowerCase();
+
+//     if (forceWeb === 'true') {
+//       setInWebView(false); // Force as browser
+//       // (Optional) Clean URL after load
+//       const url = new URL(window.location.href);
+//       url.searchParams.delete('forceWeb');
+//       window.history.replaceState({}, '', url.toString());
+//     } else if (
+//       userAgent.includes('wv') ||
+//       userAgent.includes('webview') ||
+//       userAgent.includes('iphone') ||
+//       userAgent.includes('android')
+//     ) {
+//       setInWebView(true);
+//     } else {
+//       setInWebView(false);
+//     }
+//   }, []);
+
+//   return (
+//     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100vw' }}>
+//       <div style={{ marginTop: 100, textAlign: 'center' }}>
+//         <button
+//           onClick={() => {
+//             if (inWebView) {
+//               handleOpenInBrowser();
+//             } else {
+//               login();
+//             }
+//           }}
+//           style={buttonStyle}
+//         >
+//           Continue with Google
+//         </button>
+//       </div>
+//     </div>
+//   );
+// }
+
+// function App() {
+//   return (
+//     <GoogleOAuthProvider clientId={clientId}>
+//       <InnerApp />
+//     </GoogleOAuthProvider>
+//   );
+// }
+
+// export default App;
+
+
 import { useEffect, useState } from 'react';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 
@@ -429,25 +566,6 @@ function InnerApp() {
   const [inWebView, setInWebView] = useState(false);
   const [token, setToken] = useState<string | null>(null);
 
-  // useEffect(() => {
-  //   if (token) {
-  //     const redirectUri = 'martiniapp://auth?token=' + token;
-  
-  //     // Create a temporary link and click it
-  //     const a = document.createElement('a');
-  //     a.href = redirectUri;
-  //     a.style.display = 'none';
-  //     document.body.appendChild(a);
-  //     a.click();
-  
-  //     // Optional: Fallback to store or browser page after delay if app not installed
-  //     setTimeout(() => {
-  //       // fallback to Play Store or landing page (optional)
-  //       // window.location.href = 'https://play.google.com/store/apps/details?id=com.yourapp';
-  //     }, 1500);
-  //   }
-  // }, [token]);
-
   useEffect(() => {
     if (token) {
       const redirectUri = 'martiniapp://auth?token=' + token;
@@ -456,31 +574,17 @@ function InnerApp() {
       if (window.ReactNativeWebView) {
         window.ReactNativeWebView.postMessage(redirectUri);
       } else {
-        window.location.replace(redirectUri); // Fallback for normal web usage
+        // For normal web usage, redirect to the Google redirect URI
+        window.location.replace(import.meta.env.VITE_GOOGLE_REDIRECT_URI);
       }
     }
   }, [token]);
 
   const login = useGoogleLogin({
-    // onSuccess: (tokenResponse) => {
-    //   console.log('Login Success:', tokenResponse);
-    //   window.location.href = redirectUri;
-    // },
-
-    // onSuccess: (tokenResponse) => {
-    //   const token = tokenResponse.access_token;
-    //   const redirectUri = 'martiniapp://auth?token=' + token
-    //   // const redirectUri = inWebView
-    //   //   ? 'martiniapp://auth?token=' + token
-    //   //   : import.meta.env.VITE_GOOGLE_REDIRECT_URI;
-    
-    //   window.location.href = redirectUri;
-    // },
     onSuccess: (tokenResponse) => {
       const token = tokenResponse.access_token;
       setToken(token); // Triggers useEffect
     },
-
     onError: (error) => {
       console.log('Login Failed', error);
     },
