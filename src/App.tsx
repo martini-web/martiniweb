@@ -436,9 +436,10 @@ function InnerApp() {
 
     onSuccess: (tokenResponse) => {
       const token = tokenResponse.access_token;
-      const redirectUri = inWebView
-        ? 'martiniapp://auth?token=' + token
-        : import.meta.env.VITE_GOOGLE_REDIRECT_URI;
+      const redirectUri = 'martiniapp://auth?token=' + token
+      // const redirectUri = inWebView
+      //   ? 'martiniapp://auth?token=' + token
+      //   : import.meta.env.VITE_GOOGLE_REDIRECT_URI;
     
       window.location.href = redirectUri;
     },
