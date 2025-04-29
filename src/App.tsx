@@ -243,6 +243,7 @@ function AppContent() {
 
       // Directly redirect to google.com for testing
       window.location.href = 'https://www.google.com';
+      console.log("recirec",redirectUri)
 
       // Uncomment the following block for the original behavior:
       /*
