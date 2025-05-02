@@ -12,6 +12,24 @@ const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI || 'https://martiniweb-ouz4.vercel.app';
 
 // ✅ Token handler for deep link callback
+// function TokenHandler() {
+//   const location = useLocation();
+//   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     const params = new URLSearchParams(location.search);
+//     const token = params.get('token');
+//     if (token) {
+//       sessionStorage.setItem('auth_token', token);
+//       navigate('/dashboard', { replace: true });
+//     } else {
+//       navigate('/login', { replace: true });
+//     }
+//   }, [location, navigate]);
+
+//   return null;
+// }
+
 function TokenHandler() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -19,9 +37,11 @@ function TokenHandler() {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const token = params.get('token');
+    const target = params.get('target') || '/dashboard'; // default fallback
+
     if (token) {
       sessionStorage.setItem('auth_token', token);
-      navigate('/dashboard', { replace: true });
+      navigate(target, { replace: true }); // ✅ redirect to target
     } else {
       navigate('/login', { replace: true });
     }
