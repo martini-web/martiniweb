@@ -1,0 +1,13 @@
+[
+    {
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.martiniappsso",
+        "sha256_cert_fingerprints": [
+          "47:F0:60:44:FC:D3:3F:45:A8:5E:BE:CA:7A:4F:AB:1E:AB:C8:97:9D:18:53:E5:8E:47:7C:51:78:98:B2:FE:E5"
+        ]
+      }
+    }
+  ]
+  

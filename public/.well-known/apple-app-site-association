@@ -1,0 +1,12 @@
+{
+    "applinks": {
+      "apps": [],
+      "details": [
+        {
+          "appID": "607915314746.org.reactjs.native.example.MartiniAppSSO",
+          "paths": ["/auth/*", "/profile", "/dashboard", "/login"]
+        }
+      ]
+    }
+  }
+  
