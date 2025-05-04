@@ -7,6 +7,7 @@ import Settings from './pages/Settings';
 import PrivateRoute from './components/PrivateRoute';
 import { useEffect } from 'react';
 import Profile from './pages/Profile';
+import ProfileRedirect from './pages/ProfileRedirect';
 
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI || 'https://martiniweb-ouz4.vercel.app';
@@ -57,6 +58,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/auth/callback" element={<TokenHandler />} />
+          <Route path="/profile" element={<ProfileRedirect />} />
 
           {/* ✅ Authenticated routes */}
           <Route
