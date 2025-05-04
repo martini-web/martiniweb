@@ -58,7 +58,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/auth/callback" element={<TokenHandler />} />
-          <Route path="/profile" element={<ProfileRedirect />} />
+          <Route path="/auth/profile" element={<ProfileRedirect />} /> 
 
           {/* ✅ Authenticated routes */}
           <Route
